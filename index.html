@@ -771,8 +771,8 @@ function selectDate(d){
 function confirmDate(){
   if(!chosenDate)return;
   showScreen('confirmed');
-  document.getElementById('confirmed-date-text').textContent=
-    chosenDate===20?'Saturday, 20th June 2026':'Sunday, 21st June 2026';
+  const dateLabel=chosenDate===20?'Saturday, 20th June 2026':'Sunday, 21st June 2026';
+  document.getElementById('confirmed-date-text').textContent=dateLabel;
   const target=new Date(2026,5,chosenDate);
   const now=new Date();
   now.setHours(0,0,0,0);target.setHours(0,0,0,0);
@@ -780,6 +780,17 @@ function confirmDate(){
   document.getElementById('countdown-num').textContent=
     diff>0?diff:(diff===0?'TODAY!!':'we already went?? 😭');
   spawnAcorns();
+
+  // silently notify via Formspree
+  fetch('https://formspree.io/f/xgobwenz',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify({
+      message:'HE SAID YES!! 🐿️🎉',
+      date_chosen: dateLabel,
+      venue:'Chef James Kitchen, Andheri, Mumbai'
+    })
+  });
 }
 
 function noPressed(){
